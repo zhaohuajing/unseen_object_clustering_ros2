@@ -2,6 +2,7 @@
 import rclpy
 from rclpy.node import Node
 from unseen_obj_clst_ros2.srv import SegImage
+import sys
 import json
 
 class SegClient(Node):
@@ -18,10 +19,12 @@ class SegClient(Node):
         rclpy.spin_until_future_complete(self, future)
         return future.result()
 
-def main():
-    rclpy.init()
+def main(args=None):
+    rclpy.init(args=args)
+    im_name = sys.argv[1] if len(sys.argv) > 1 else '000000'
     node = SegClient()
-    res = node.send_request('000007')
+    res = node.send_request(im_name)
+    node.get_logger().info(f"Requesting segmentation for images: {im_name}-color.png, {im_name}-depth.png")
     if res.success:
         print("Segmentation success.")
         print(json.dumps(json.loads(res.json_result), indent=2))
