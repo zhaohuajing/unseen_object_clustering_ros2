@@ -2,18 +2,27 @@
 <package format="3">
   <name>unseen_obj_clst_ros2</name>
   <version>0.0.1</version>
-  <description>ROS 2 wrapper for unseen object clustering (segmentation service).</description>
+  <description>ROS2 unseen object clustering wrapper</description>
 
   <maintainer email="you@example.com">Huajing Zhao</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <!-- Build deps -->
   <build_depend>rosidl_default_generators</build_depend>
   <build_depend>rclpy</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>std_msgs</build_depend>
 
+  <!-- Export -->
+  <build_export_depend>rosidl_default_runtime</build_export_depend>
+
+  <!-- Exec -->
   <exec_depend>rosidl_default_runtime</exec_depend>
   <exec_depend>rclpy</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
 
   <member_of_group>rosidl_interface_packages</member_of_group>
 

@@ -12,7 +12,8 @@ class SegService(Node):
         self.srv = self.create_service(SegImage, 'run_segmentation', self.callback)
         self.docker_name = "unseen_obj_container"
         self.base_dir = "/root/graspnet_ws/src/unseen_obj_clst_ros2/compare_UnseenObjectClustering"
-        self.python_script = "/root/graspnet_ws/src/unseen_obj_clst_ros2/compare_UnseenObjectClustering/test_images_segmentation_no_ros.py"
+        self.python_script = "/root/graspnet_ws/src/unseen_obj_clst_ros2/compare_UnseenObjectClustering/test_images_segmentation_no_ros_backup.py"
+        # self.python_script = "/root/graspnet_ws/src/unseen_obj_clst_ros2/compare_UnseenObjectClustering/test_images_segmentation_no_ros.py"
         self.input_dir = "/root/graspnet_ws/src/unseen_obj_clst_ros2/compare_UnseenObjectClustering/data/demo"
         self.output_dir = "/root/graspnet_ws/src/unseen_obj_clst_ros2/compare_UnseenObjectClustering/output/inference_results"
         self.get_logger().info("Segmentation service ready.")
@@ -21,6 +22,7 @@ class SegService(Node):
         image_name = request.image_name
         cmd = (
             f"docker exec {self.docker_name} bash -lc "
+            # f"docker exec -e MPLBACKEND=Agg -e QT_QPA_PLATFORM=offscreen {self.docker_name} bash -lc "
             f"\"conda run -n unseen_obj python {self.python_script} "
             f"--gpu 0 --network seg_resnet34_8s_embedding "
             f"--pretrained {self.base_dir}/checkpoints/seg_resnet34_8s_embedding_cosine_rgbd_add_sampling_epoch_16.checkpoint.pth "

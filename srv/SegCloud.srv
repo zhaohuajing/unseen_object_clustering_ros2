@@ -1,0 +1,7 @@
+# SegCloud.srv
+sensor_msgs/PointCloud2 cloud         # organized or unorganized
+sensor_msgs/CameraInfo   cam_info     # optional; needed if cloud is unorganized or lacks RGB alignment
+---
+bool   success
+string json_result                    # JSON (same schema as image path)
+string log_output
