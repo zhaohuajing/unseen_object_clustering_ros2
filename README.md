@@ -106,7 +106,7 @@ ros2 service call /segmentation_rgbd unseen_obj_clst_ros2/srv/SegImage "{im_name
 
 ### 3. Point Cloud Segmentation (Experimental)
 
-⚠ Not recommended: Tentative workaround for Point Cloud inputs.
+Not recommended: Tentative workaround for testing with Point Cloud inputs.
 
 **Server**
 ```
