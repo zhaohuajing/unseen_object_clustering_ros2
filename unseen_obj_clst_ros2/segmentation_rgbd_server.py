@@ -15,6 +15,8 @@ import numpy as np
 from unseen_obj_clst_ros2.srv import SegImage  # request has: string im_name
 
 
+# Note: run "ros2 service call /segmentation_rgbd unseen_obj_clst_ros2/srv/SegImage "{im_name: 'from_rgbd'}" in another terminal
+
 class SegImageService(Node):
     """
     segmentation_rgbd_server:
@@ -38,10 +40,13 @@ class SegImageService(Node):
         self.declare_parameter("network_name", "seg_resnet34_8s_embedding")
         self.declare_parameter(
             "pretrained",
-            "/root/graspnet_ws/src/unseen_obj_clst_ros2/compare_UnseenObjectClustering/checkpoints/seg_resnet34_8s_embedding_cosine_rgbd_cat_crop_sampling_epoch_16.checkpoint.pth",
+            "/root/graspnet_ws/src/unseen_obj_clst_ros2/compare_UnseenObjectClustering/checkpoints/seg_resnet34_8s_embedding_cosine_rgbd_add_sampling_epoch_16.checkpoint.pth",
         )
         # If you have no crop model, leave this empty or unset
-        self.declare_parameter("pretrained_crop", "")
+        self.declare_parameter(
+            "pretrained_crop", 
+            "/root/graspnet_ws/src/unseen_obj_clst_ros2/compare_UnseenObjectClustering/checkpoints/seg_resnet34_8s_embedding_cosine_rgbd_add_crop_sampling_epoch_16.checkpoint.pth"
+            )
         self.declare_parameter(
             "cfg",
             "/root/graspnet_ws/src/unseen_obj_clst_ros2/compare_UnseenObjectClustering/experiments/cfgs/seg_resnet34_8s_embedding_cosine_rgbd_add_tabletop.yml",
@@ -154,7 +159,7 @@ class SegImageService(Node):
         return subprocess.run(
             cmd,
             shell=True,
-            capture_output=False,
+            capture_output=True,
             text=True,
             timeout=1200,
         )
