@@ -30,14 +30,49 @@ All three servers ultimately call the same **Unseen Object Clustering inference 
 
 ---
 
-## Architecture
 
-ROS 2 Node  
-└── Service callback  
-    └── Save RGB / Depth / Cloud to disk  
-        └── docker exec unseen_obj_container  
-            └── test_images_segmentation_no_ros.py  
-                └── UCN / UOC inference  
+## Architecture  
+
+```text
+
++--------------------+       +-------------------+      +------------------------------+
+|   Gazebo / GZ Sim   | ---> |   ROS-GZ Bridge   | ---> |      ROS 2 Server Node       |
+| (RGBD camera sensor)|      | (GZ -> ROS topics)|      |  segmentation_rgbd_server.py |
++--------------------+       +-------------------+      +------------------------------+
+   |   /rgbd_camera/image              |                        |
+   |   /rgbd_camera/depth_image        |                        |  (save RGB+Depth, intrinsics)
+   |   /rgbd_camera/camera_info        |                        v
+   |                                   |         +------------------------------------+
+   |                                   +-------> |      Docker (unseen_obj env)       |
+   |                                             | test_images_segmentation_no_ros.py |
+   |                                             |          (UOC inference)           |
+   |                                             +------------------------------------+
+   |                                                              |
+   |                                                              v
+   |                                                  +------------------------------+
+   |                                                  |  Outputs on shared volume:   |
+   |                                                  |  - im_label.npy (instance id)|
+   |                                                  |  - segmentation.json         |
+   |                                                  +------------------------------+
+   |                                                              |
+   |                                                              v
+   +----------------------------------------------------<---------+
+                                    (parse + return via ROS2 service)
+
++-------------------+                 ^
+|   ROS2 Client     | ---------------+
+| (service call)    |   /segmentation_rgbd  (SegImage.srv)
++-------------------+
+
+```
+
+Flow:  
+1. Gazebo publishes RGB, depth, and camera intrinsics from the RGB-D camera sensor.
+2. `ros_gz_bridge` bridges Gazebo topics to ROS 2 topics (`/rgbd_camera/image`, `/rgbd_camera/depth_image`, `/rgbd_camera/camera_info`).
+3. A ROS 2 client calls `/segmentation_rgbd` (e.g., `{im_name: 'from_rgbd'}`).
+4. `segmentation_rgbd_server.py` subscribes to RGB/depth/camera_info, saves them to a shared input folder, then launches UCN inference inside Docker via `subprocess` and `docker` exec.
+5. The Docker-side script (`test_images_segmentation_no_ros.py`) runs Unseen Object Clustering and writes outputs (`im_label.npy`, `segmentation.json`) to a shared output folder.
+6. The server parses the outputs and returns results (success flag + JSON + output directory path) to the ROS 2 client.              
 
 ---
 
@@ -168,7 +203,7 @@ ros2 service call /segmentation_rgbd unseen_obj_clst_ros2/srv/SegImage "{im_name
 
 ## Status
 
-- RGB-D Gazebo → ROS 2 → Docker → UCN → segmentation **WORKING**
+- RGB-D Gazebo → ROS 2 → Docker → UOC segmentation **WORKING**
 - Multiple object instances segmented successfully
 - Ready for FlexBE and grasp planning integration
 
