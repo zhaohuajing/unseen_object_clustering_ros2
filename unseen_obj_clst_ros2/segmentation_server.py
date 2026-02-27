@@ -26,8 +26,8 @@ class SegService(Node):
             # f"docker exec -e MPLBACKEND=Agg -e QT_QPA_PLATFORM=offscreen {self.docker_name} bash -lc "
             f"\"conda run -n unseen_obj python {self.python_script} "
             f"--gpu 0 --network seg_resnet34_8s_embedding "
-            f"--pretrained {self.base_dir}/checkpoints/seg_resnet34_8s_embedding_cosine_rgbd_add_sampling_epoch_16.checkpoint.pth " # good
             # f"--pretrained {self.base_dir}/checkpoints/seg_resnet34_8s_embedding_cosine_rgbd_cat_crop_sampling_epoch_16.checkpoint.pth " # BAD EXAMPLE
+            f"--pretrained {self.base_dir}/checkpoints/seg_resnet34_8s_embedding_cosine_rgbd_add_sampling_epoch_16.checkpoint.pth " # good
             f"--pretrained_crop {self.base_dir}/checkpoints/seg_resnet34_8s_embedding_cosine_rgbd_add_crop_sampling_epoch_16.checkpoint.pth " # good
             f"--cfg {self.base_dir}/experiments/cfgs/seg_resnet34_8s_embedding_cosine_rgbd_add_tabletop.yml "
             f"--input_dir {self.input_dir} "

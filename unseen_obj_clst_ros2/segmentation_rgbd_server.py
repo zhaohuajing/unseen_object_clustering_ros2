@@ -85,12 +85,12 @@ class SegImageService(Node):
         # Local mirror dirs (bind-mounted into container)
         # These paths are on the host; they must be bind-mounted to the corresponding
         # *input_dir_in_container* and *output_dir_in_container* in your Docker setup.
-        self.local_input_dir = (
-            os.path.expanduser("~/graspnet_ws/src/unseen_obj_clst_ros2/")
+        self.local_input_dir = os.path.join(
+            os.path.expanduser("~/graspnet_ws/src/unseen_obj_clst_ros2/"),
             "compare_UnseenObjectClustering/segmentation_rgbd/input"
         )
-        self.local_output_dir = (
-            os.path.expanduser("~/graspnet_ws/src/unseen_obj_clst_ros2/")
+        self.local_output_dir = os.path.join(
+            os.path.expanduser("~/graspnet_ws/src/unseen_obj_clst_ros2/"),
             "compare_UnseenObjectClustering/segmentation_rgbd/output"
         )
 
