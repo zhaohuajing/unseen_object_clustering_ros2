@@ -86,11 +86,11 @@ class SegImageService(Node):
         # These paths are on the host; they must be bind-mounted to the corresponding
         # *input_dir_in_container* and *output_dir_in_container* in your Docker setup.
         self.local_input_dir = (
-            "/home/csrobot/graspnet_ws/src/unseen_obj_clst_ros2/"
+            os.path.expanduser("~/graspnet_ws/src/unseen_obj_clst_ros2/")
             "compare_UnseenObjectClustering/segmentation_rgbd/input"
         )
         self.local_output_dir = (
-            "/home/csrobot/graspnet_ws/src/unseen_obj_clst_ros2/"
+            os.path.expanduser("~/graspnet_ws/src/unseen_obj_clst_ros2/")
             "compare_UnseenObjectClustering/segmentation_rgbd/output"
         )
 

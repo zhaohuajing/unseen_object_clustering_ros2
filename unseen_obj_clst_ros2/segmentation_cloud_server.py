@@ -152,7 +152,7 @@ class SegCloudService(Node):
         # Container name that already runs your UCN environment & has the model/checkpoints inside
         self.container = "unseen_obj_container"  # e.g., set to whatever you use with segmentation_server.py
         self.base_dir = "/root/graspnet_ws/src/unseen_obj_clst_ros2/compare_UnseenObjectClustering"
-        self.base_dir_host = "/home/csrobot/graspnet_ws/src/unseen_obj_clst_ros2/compare_UnseenObjectClustering"
+        self.base_dir_host = os.path.expanduser("~/graspnet_ws/src/unseen_obj_clst_ros2/compare_UnseenObjectClustering")
 
         # Paths inside the container (what the image script expects)
         self.script_in = f"{self.base_dir}/test_images_segmentation_no_ros.py"
