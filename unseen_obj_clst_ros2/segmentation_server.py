@@ -15,28 +15,31 @@ class SegService(Node):
         self.python_script = "/root/graspnet_ws/src/unseen_obj_clst_ros2/compare_UnseenObjectClustering/test_images_segmentation_no_ros_backup.py"
         # self.python_script = "/root/graspnet_ws/src/unseen_obj_clst_ros2/compare_UnseenObjectClustering/test_images_segmentation_no_ros.py"
         self.input_dir = "/root/graspnet_ws/src/unseen_obj_clst_ros2/compare_UnseenObjectClustering/data/demo"
+        # self.input_dir = "/root/graspnet_ws/src/unseen_obj_clst_ros2/compare_UnseenObjectClustering/data/cgn_sample"
         self.output_dir = "/root/graspnet_ws/src/unseen_obj_clst_ros2/compare_UnseenObjectClustering/output/inference_results"
         self.get_logger().info("Segmentation service ready.")
 
     def callback(self, request, response):
-        image_name = request.image_name
+        im_name = request.im_name
         cmd = (
             f"docker exec {self.docker_name} bash -lc "
             # f"docker exec -e MPLBACKEND=Agg -e QT_QPA_PLATFORM=offscreen {self.docker_name} bash -lc "
             f"\"conda run -n unseen_obj python {self.python_script} "
             f"--gpu 0 --network seg_resnet34_8s_embedding "
-            f"--pretrained {self.base_dir}/checkpoints/seg_resnet34_8s_embedding_cosine_rgbd_add_sampling_epoch_16.checkpoint.pth "
-            f"--pretrained_crop {self.base_dir}/checkpoints/seg_resnet34_8s_embedding_cosine_rgbd_add_crop_sampling_epoch_16.checkpoint.pth "
+            f"--pretrained {self.base_dir}/checkpoints/seg_resnet34_8s_embedding_cosine_rgbd_add_sampling_epoch_16.checkpoint.pth " # good
+            # f"--pretrained {self.base_dir}/checkpoints/seg_resnet34_8s_embedding_cosine_rgbd_cat_crop_sampling_epoch_16.checkpoint.pth " # BAD EXAMPLE
+            f"--pretrained_crop {self.base_dir}/checkpoints/seg_resnet34_8s_embedding_cosine_rgbd_add_crop_sampling_epoch_16.checkpoint.pth " # good
             f"--cfg {self.base_dir}/experiments/cfgs/seg_resnet34_8s_embedding_cosine_rgbd_add_tabletop.yml "
             f"--input_dir {self.input_dir} "
             f"--output_dir {self.output_dir} "
-            f"--im_name {image_name}\""
+            f"--im_name {im_name}\""
         )
 
         try:
             proc = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=600)
             log_output = proc.stdout + "\n" + proc.stderr
-            result_dir = os.path.join(self.output_dir, f"segmentation_{image_name}")
+            # result_dir = os.path.join(self.output_dir, f"segmentation_cgn_{im_name}")
+            result_dir = os.path.join(self.output_dir, f"segmentation_{im_name}")
             json_path = os.path.join(result_dir, "segmentation.json")
 
             if not os.path.exists(json_path):

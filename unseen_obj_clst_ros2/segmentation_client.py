@@ -14,7 +14,7 @@ class SegClient(Node):
         self.req = SegImage.Request()
 
     def send_request(self, im_name):
-        self.req.image_name = im_name
+        self.req.im_name = im_name
         future = self.cli.call_async(self.req)
         rclpy.spin_until_future_complete(self, future)
         return future.result()
